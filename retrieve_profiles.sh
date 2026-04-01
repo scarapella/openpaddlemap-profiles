@@ -9,7 +9,7 @@ if [ ! -z "$1" ]; then
 fi
 
 DEST_DIR="./profiles2"
-FILES=("paddle.brf" "waterway.brf")
+FILES=("lookups.dat" "paddle.brf" "waterway.brf")
 
 echo "source: \"$SOURCE_DIR\""
 echo "dest  : \"$DEST_DIR\""
