@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 cd "$(dirname "$0")"
 
 SOURCE_DIR="./profiles2/"
