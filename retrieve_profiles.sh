@@ -9,8 +9,8 @@ if [ ! -z "$1" ]; then
 fi
 
 DEST_DIR="./profiles2"
-# only paddle.brf and waterway.brf + lookups.dat are needed for openpaddlemap, but all.brf, softaccess.brf and trekking.brf are used during the pbf processing. 
-FILES=("paddle.brf" "waterway.brf" "lookups.dat" "all.brf" "softaccess.brf" "trekking.brf")
+# only paddle.brf and river.brf + lookups.dat are needed for openpaddlemap, but all.brf, softaccess.brf and trekking.brf are used during the pbf processing. 
+FILES=("paddle.brf" "river.brf" "lookups.dat" "all.brf" "softaccess.brf" "trekking.brf")
 
 echo "source: \"$SOURCE_DIR\""
 echo "dest  : \"$DEST_DIR\""
