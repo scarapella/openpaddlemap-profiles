@@ -119,6 +119,7 @@ assign portageableway
 	if highway=platform|proposed|rest_area then false
 	else true
   )
+  else if man_made=pier then true
   else false
 
 #calculate logical portage access
