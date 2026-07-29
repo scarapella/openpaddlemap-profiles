@@ -1,2 +1,2 @@
-# openpaddlemap-profiles
-Brouter profiles for https://map.openpaddlemap.org
+# paddlemap-profiles
+Brouter profiles for [PaddleMap](https://paddlemap.net/)
