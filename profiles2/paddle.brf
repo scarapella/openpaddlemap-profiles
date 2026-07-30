@@ -143,6 +143,10 @@ assign hand_cartableway
 	else if highway=steps then false
 	else if smoothness=very_horrible|impassable then false
 	else if and highway=path|footway motor_vehicle=yes|designated|permissive|agricultural then true
+  else if footway=sidewalk then true
+  else if footway=crossing then true
+  else if bicycle=designated|yes then true
+  else if highway=cycleway then true
 	else if highway=path|footway then false
 	else true
   )
