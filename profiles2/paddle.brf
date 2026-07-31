@@ -4,16 +4,16 @@ assign avoid_no			  = 0
 assign avoid_prefer		= 1
 assign avoid_yes 		  = 2
 
-assign number_portage_carries = 2				  # %number_portage_carries% | How many carries of gear+boat do you typically do when not using a portage cart? | number
-assign use_portage_cart			  = false		  # %use_portage_cart% | Will you use a portage cart when possible? | boolean
-assign max_rapids             = 3    		  # %max_rapids% | Maximum class of rapids you are willing to run? | [0=Avoid all known rapids, 1=Class I, 2=Class II, 3=Classs III, 4=Class IV, 5=Class V]
-assign max_upstream_rapids    = 3    		  # %max_upstream_rapids% | Maximum class of rapids you are willing to ascend? | [0=Avoid all known rapids, 1=Class I, 2=Class II, 3=Classs III, 4=Class IV, 5=Class V]
-assign default_unknown_rapids	= 3				  # %default_unknown_rapids% | What is the default class to use for unspecified rapids? | [1=Class I, 2=Class II, 3=Classs III, 4=Class IV, 5=Class V]
-assign allow_upstream_travel	= true		  # %allow_upstream_travel% | Allow upstream travel? | boolean
-assign avoid_open_water			  = avoid_no	# %avoid_open_water% | Avoid open water? |[avoid_no=Do not avoid, avoid_prefer=Prefer to avoid, avoid_yes=Always avoid]
-assign avoid_tidal				    = avoid_no	# %avoid_tidal% | Avoid tidal water? |[avoid_no=Do not avoid, avoid_prefer=Prefer to avoid, avoid_yes=Always avoid]
-assign avoid_intermittent		  = avoid_yes	# %avoid_intermittent% | Avoid intermittent water? |[avoid_no=Do not avoid, avoid_prefer=Prefer to avoid, avoid_yes=Always avoid]
-assign avoid_small_waterways	= true			# %avoid_small_waterways% | Avoid streams, ditches, and drains (except when canoeing is explictly allowed)? | boolean
+assign number_portage_carries = 2         # %number_portage_carries% | How many carries of gear+boat do you typically do when not using a portage cart? | number
+assign use_portage_cart       = false     # %use_portage_cart% | Will you use a portage cart when possible? | boolean
+assign max_rapids             = 3         # %max_rapids% | Maximum class of rapids you are willing to run? | [0=Avoid all known rapids, 1=Class I, 2=Class II, 3=Classs III, 4=Class IV, 5=Class V]
+assign max_upstream_rapids    = 3         # %max_upstream_rapids% | Maximum class of rapids you are willing to ascend? | [0=Avoid all known rapids, 1=Class I, 2=Class II, 3=Classs III, 4=Class IV, 5=Class V]
+assign default_unknown_rapids = 3         # %default_unknown_rapids% | What is the default class to use for unspecified rapids? | [1=Class I, 2=Class II, 3=Classs III, 4=Class IV, 5=Class V]
+assign allow_upstream_travel  = true      # %allow_upstream_travel% | Allow upstream travel? | boolean
+assign avoid_open_water       = avoid_no  # %avoid_open_water% | Avoid open water? |[avoid_no=Do not avoid, avoid_prefer=Prefer to avoid, avoid_yes=Always avoid]
+assign avoid_tidal            = avoid_no  # %avoid_tidal% | Avoid tidal water? |[avoid_no=Do not avoid, avoid_prefer=Prefer to avoid, avoid_yes=Always avoid]
+assign avoid_intermittent     = avoid_yes # %avoid_intermittent% | Avoid intermittent water? |[avoid_no=Do not avoid, avoid_prefer=Prefer to avoid, avoid_yes=Always avoid]
+assign avoid_small_waterways  = true      # %avoid_small_waterways% | Avoid streams, ditches, and drains (except when canoeing is explictly allowed)? | boolean
 
 assign add_beeline         		= false  		# %add_beeline% | Enable beeline on distant start/end points | boolean
 
@@ -94,6 +94,11 @@ assign canoeablewaterway
   else if and waterway=stream|ditch|drain or canoespecified not avoid_small_waterways then true
   else false
 
+assign tidalwaterway
+  if tidal=yes then true
+  else if waterway=tidal_channel then true
+  else false
+  
 # calculate logical canoe access
 assign canoeaccess =
   if ignore_access_canoe then true
@@ -103,7 +108,7 @@ assign canoeaccess =
   else if and not allow_upstream_travel is_upstream  then false
   else if and equal avoid_open_water avoid_yes or open_water=yes open_water=partial then false # treat open_water=yes|partial  as no canoe access if preference to avoid it is set
   else if and equal avoid_intermittent avoid_yes intermittent=yes then false # treat intermittent=yes as no canoe access if preference to avoid it is set
-  else if and equal avoid_tidal avoid_yes tidal=yes then false # treat tidal=yes as no canoe access if preference to avoid it is set
+  else if and equal avoid_tidal avoid_yes tidalwaterway then false # treat tidal=yes as no canoe access if preference to avoid it is set
   else if canoespecified then true
   else if strict_access_canoe then false # stop trying after positive canoe access if we are following strict access rules
   else if canoe=no|discouraged|private then false
@@ -116,8 +121,8 @@ assign canoeaccess =
 assign portageableway
   if not highway= then
   (
-	if highway=platform|proposed|rest_area then false
-	else true
+    if highway=platform|proposed|rest_area then false
+    else true
   )
   else if man_made=pier then true
   else false
@@ -138,17 +143,17 @@ assign portageaccess
 assign hand_cartableway
   if portageableway then
   (
-	if hand_cartspecified then true
-	else if hand_cart=no then false
-	else if highway=steps then false
-	else if smoothness=very_horrible|impassable then false
-	else if and highway=path|footway motor_vehicle=yes|designated|permissive|agricultural then true
-  else if footway=sidewalk then true
-  else if footway=crossing then true
-  else if bicycle=designated|yes then true
-  else if highway=cycleway then true
-	else if highway=path|footway then false
-	else true
+    if hand_cartspecified then true
+    else if hand_cart=no then false
+    else if highway=steps then false
+    else if smoothness=very_horrible|impassable then false
+    else if and highway=path|footway motor_vehicle=yes|designated|permissive|agricultural then true
+    else if footway=sidewalk then true
+    else if footway=crossing then true
+    else if bicycle=designated|yes then true
+    else if highway=cycleway then true
+    else if highway=path|footway then false
+    else true
   )
   else false
 
@@ -166,7 +171,7 @@ assign accesspenalty
   add switch and canoeablewaterway and equal avoid_open_water avoid_prefer open_water=yes 2 0
   add switch and canoeablewaterway and equal avoid_open_water avoid_prefer open_water=partial 1 0
   add switch and canoeablewaterway and equal avoid_intermittent avoid_prefer intermittent=yes 2 0
-	  switch and canoeablewaterway and equal avoid_tidal avoid_prefer tidal=yes 2 0
+  switch and canoeablewaterway and equal avoid_tidal avoid_prefer avoid_tidal 2 0
 
 #calculate number of portages
 assign loadedportagecarries
