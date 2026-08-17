@@ -529,8 +529,6 @@ waterway;0000000001 ditch
 waterway;0000000001 drain
 waterway;0000000001 stream
 
-natual;0000000001 water
-
 tidal;0000000001 no
 tidal;0000000001 yes
 
@@ -882,18 +880,6 @@ construction;0000568118 living_street
 construction;0000515044 motorway motorway_link
 construction;0000442502 steps
 construction;0000360177 road highway
-
-dummy;0000000001 value0
-dummy;0000000001 value1
-dummy;0000000001 value2
-dummy;0000000001 value3
-dummy;0000000001 value4
-dummy;0000000001 value5
-dummy;0000000001 value6
-dummy;0000000001 value7
-dummy;0000000001 value8
-dummy;0000000001 value9
-
 
 
 ---context:node
